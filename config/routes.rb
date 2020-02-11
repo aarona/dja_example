@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  get 'me', action: :index, controller: :me
   mount_devise_jwt_auth_for 'User', at: 'auth'
   namespace :api do
     #API ROUTES SHOULD GO HERE

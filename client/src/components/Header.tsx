@@ -6,7 +6,7 @@ interface HeaderProps {
 
 }
 
-export const Header: React.FC<HeaderProps> = ({}) => {
+export const Header: React.FC<HeaderProps> = () => {
   const loggedIn = false
   const body = "filler text"
   

@@ -9,5 +9,5 @@ class DjaExampleSchema < GraphQL::Schema
   use GraphQL::Pagination::Connections
 
   # Adds reflection (remove for production?)
-  use GraphQL::Analysis::AST
+  use GraphQL::Analysis::AST unless Rails.env.production?
 end

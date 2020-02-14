@@ -1,0 +1,10 @@
+query Me {
+  me {
+    allowPasswordChange
+    uid
+    email
+    provider
+    createdAt
+    updatedAt
+  }
+}

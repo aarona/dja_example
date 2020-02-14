@@ -28,7 +28,8 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "gen": "graphql-codegen"
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -45,5 +46,15 @@
       "last 1 safari version"
     ]
   },
-  "proxy": "http://localhost:3001"
+  "proxy": "http://localhost:3001",
+  "devDependencies": {
+    "@graphql-codegen/cli": "^1.12.2",
+    "@graphql-codegen/introspection": "^1.12.2",
+    "@graphql-codegen/typescript": "^1.12.2",
+    "@graphql-codegen/typescript-operations": "1.12.2",
+    "@graphql-codegen/typescript-react-apollo": "1.12.2",
+    "@types/graphql": "^14.5.0",
+    "@types/jwt-decode": "^2.2.1",
+    "graphql-codegen": "^0.4.0"
+  }
 }

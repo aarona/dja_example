@@ -1,17 +1,16 @@
 import React from 'react'
 import { Redirect } from 'react-router'
+import { useMeQuery } from '../generated/graphql'
 
 interface ProfileProps {
 
 }
 
 export const Profile: React.FC<ProfileProps> = () => {
-  const error = true
-  const loading = true
-  const data = null
+  const { data, loading, error } = useMeQuery()
 
   if (error) {
-    console.log(error)
+    // console.log(error)
     return <Redirect to={'/'} />
   }
 
@@ -25,5 +24,6 @@ export const Profile: React.FC<ProfileProps> = () => {
 
   return <div>
     <h1>My Profile</h1>
+    <div>Email: {data.me.email}</div>
   </div>
 }

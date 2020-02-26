@@ -21,10 +21,10 @@ export const signUp = (email: string, password: string) => {
     return response.json()
   })
   .then((data) => {
-    console.log(data);
+    // console.log(data);
   })
   .catch((error) => {
-    console.error('ERROR: ', error);
+    // console.error('ERROR: ', error);
   })
 }
 
@@ -32,11 +32,11 @@ export const signIn = async (
   email: string,
   password: string
 ) => {
-  console.log("FETCHING...");
+  // console.log("FETCHING...");
 
   return fetch(`${endPoint}/sign_in`, {
     method: 'POST',
-    //credentials: 'include',
+    credentials: 'include',
     headers: {
       'Content-Type': 'application/json'
     },
@@ -46,27 +46,19 @@ export const signIn = async (
     }),
   })
   .then((response) => {
-    const authentication = getHeaders(response.headers)
-    console.log("FETCHED RESPONSE...", authentication)
+    // const authentication = getHeaders(response.headers)
+    // console.log("FETCHED RESPONSE...", authentication)
 
     return response.json()
   })
 }
 
-export const refreshToken = async () => {
-  console.log("REFRESH REQUEST S...ENT");
-
+export const refreshToken = () => {
+  //console.log("refreshToken: called");
+  
   return fetch(`${endPoint}/refresh_token`, {
-    method: 'GET',
-    credentials: 'include',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-  })
-  .then((response) => {
-    const authentication = getHeaders(response.headers)
-    console.log("FETCHED RESPONSE...", authentication)
-    return response.json()
+    method: "GET",
+    credentials: "include"
   })
 }
 

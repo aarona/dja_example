@@ -1,44 +1,44 @@
-import React, { useState } from 'react'
+import React, { useState, useContext } from 'react'
 import { RouteComponentProps } from 'react-router'
-import { setAccessToken, getAccessToken } from '../utils/accessToken'
+import { setAccessToken } from '../utils/accessToken'
 import { signIn } from '../utils/authentication'
+import { StoreContext } from '../components/StoreContext'
+import { MeDocument, MeQuery } from '../generated/graphql'
+import { Errors } from '../components/Errors'
 
 export const Login: React.FC<RouteComponentProps> = ({ history }) => {
+  const { useClient } = useContext(StoreContext)!
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  const [client] = useClient
+  const [errors, setErrors] = useState<string[]>([])
 
   const onSubmit = async (e: any) => {
     e.preventDefault()
 
-    console.log("SIGNING IN...")
-    try {
-      const data = await signIn(email, password)
-      console.log("FETCHED DATA...", data)
+    const data = await signIn(email, password)
+
+    if(data && data['access-token'])
+    {
+      client.writeQuery<MeQuery>({
+        query: MeDocument,
+        data: {
+          me: data.user
+        }
+      })
+
       setAccessToken(data['access-token'])
-      console.log("ACCESS TOKEN: ", getAccessToken());
-      
-      //const currentUser: IUser = {
-      //  allow_password_change: data.allow_password_change,
-      //  email: data.email,
-      //  id: data.id,
-      //  name: data.name,
-      //  provider: data.provider,
-      //  uid: data.uid
-      //}
+      history.push('/')
 
-      //setCurrentUser(currentUser)
-      console.log("SIGNED IN...");
-    } catch (error) {
-      console.error('ERROR: ', error)
-      //setCurrentUser(null)
+    } else {
+      setErrors(data.errors)
     }
-
-    history.push('/')
   }
 
   return <div>
     <h1>Login Page</h1>
     <form onSubmit={onSubmit} >
+      <Errors errors={errors} />
       <div>
         <input value={email} placeholder="Email" onChange={e => {
           setEmail(e.target.value)

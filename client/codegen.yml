@@ -1,5 +1,8 @@
 overwrite: true
-schema: "http://localhost:3001/graphql"
+schema:
+  - "http://localhost:3001/graphql":
+      headers:
+        'access-token': ${CODEGEN_ACCESS_TOKEN}
 documents: "src/**/*.graphql"
 generates:
   src/generated/graphql.tsx:
@@ -7,6 +10,7 @@ generates:
       - "typescript"
       - "typescript-operations"
       - "typescript-react-apollo"
-  ./graphql.schema.json:
-    plugins:
-      - "introspection"
+    config:
+      withHOC: false
+      withComponent: false
+      withHooks: true

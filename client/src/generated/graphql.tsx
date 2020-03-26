@@ -11,9 +11,24 @@ export type Scalars = {
   Float: number,
 };
 
+export type LoginInput = {
+  clientMutationId?: Maybe<Scalars['String']>,
+};
+
+export type LoginPayload = {
+   __typename?: 'LoginPayload',
+  clientMutationId?: Maybe<Scalars['String']>,
+};
+
 export type Mutation = {
    __typename?: 'Mutation',
+  login?: Maybe<LoginPayload>,
   testField: Scalars['String'],
+};
+
+
+export type MutationLoginArgs = {
+  input: LoginInput
 };
 
 export type Query = {
@@ -38,7 +53,7 @@ export type MeQuery = (
   { __typename?: 'Query' }
   & { me: (
     { __typename?: 'User' }
-    & Pick<User, 'allowPasswordChange' | 'uid' | 'email' | 'provider' | 'createdAt' | 'updatedAt'>
+    & Pick<User, 'allowPasswordChange' | 'uid' | 'email' | 'provider'>
   ) }
 );
 
@@ -50,8 +65,6 @@ export const MeDocument = gql`
     uid
     email
     provider
-    createdAt
-    updatedAt
   }
 }
     `;

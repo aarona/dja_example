@@ -1,8 +1,9 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useContext } from 'react'
 import './App.css'
 import Routes from './Routes'
 import { setAccessToken } from './utils/accessToken'
-import { refreshToken } from './utils/authentication'
+import { refreshTokenResponse } from './utils/authentication'
+import { AuthContext } from './components/AuthProvider'
 
 interface AppProps {
 
@@ -10,27 +11,22 @@ interface AppProps {
 
 export const App: React.FC<AppProps> = () => {
   const [loading, setLoading] = useState(true)
+  const { setCurrentUser } = useContext(AuthContext)
 
   useEffect(() => {
-    // console.log("INITIAL USE EFFECT CALLED.");
-    
-    refreshToken().then(async x => {
-      // debugger
-      if(x) {
-        const { 'access-token':accessToken } = await x.json()
-        // console.log("PAGE RELOAD ACCESS TOKEN: ", accessToken);
-        
-        setAccessToken(accessToken)
-        setLoading(false)
-      } else {
-        // console.log("another error!");
-        
-      }
-    }).catch((error) => {
-      // console.log("ERROR: ", error);
+    refreshTokenResponse().then(data => {
+      let { user, accessToken } = data
+
+      setCurrentUser!(user)
+      setAccessToken(accessToken)
+      setLoading(false)
       
+    }).catch((error) => {
+      setCurrentUser!(null)
+      setAccessToken('')
+      setLoading(false)
     })
-  }, [])
+  }, [setCurrentUser])
 
   if (loading) {
     return <div>Loading...</div>

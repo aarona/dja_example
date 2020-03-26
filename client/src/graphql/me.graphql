@@ -4,7 +4,7 @@ query Me {
     uid
     email
     provider
-    createdAt
-    updatedAt
+    # createdAt
+    # updatedAt
   }
 }

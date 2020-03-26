@@ -15,7 +15,7 @@ DeviseJwtAuth.setup do |config|
   # access protected resources. When these tokens expire, you need to
   # reauthenticate the user or use a refresh token cookie to get a new access
   # token.
-  config.access_token_lifespan = 15.seconds
+  config.access_token_lifespan = 15.minutes
 
   # This is the name of the HTTP Only cookie that will be sent to the client
   # for the purpose of requesting new access tokens.

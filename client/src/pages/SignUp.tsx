@@ -1,42 +1,55 @@
 import React, { useState, useContext } from 'react'
-import { RouteComponentProps } from 'react-router'
+import { RouteComponentProps, Redirect } from 'react-router'
 import { setAccessToken } from '../utils/accessToken'
-import { signIn } from '../utils/authentication'
-import { StoreContext } from '../components/StoreContext'
 import { MeDocument, MeQuery } from '../generated/graphql'
+import { signUp } from '../utils/authentication'
+import { AuthContext } from '../components/AuthProvider'
 import { Errors } from '../components/Errors'
 
-export const Login: React.FC<RouteComponentProps> = ({ history }) => {
-  const { useClient } = useContext(StoreContext)!
+export const SignUp: React.FC<RouteComponentProps> = ({ history }) => {
+  const { currentUser, setCurrentUser, client } = useContext(AuthContext)
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
-  const [client] = useClient
   const [errors, setErrors] = useState<string[]>([])
+
+  let loggedIn = currentUser !== null
+
+  if (loggedIn) {
+    return <Redirect to="/" />
+  }
 
   const onSubmit = async (e: any) => {
     e.preventDefault()
 
-    const data = await signIn(email, password)
+    const data = await signUp(email, password)
 
-    if(data && data['access-token'])
-    {
+    if (data.accessToken) {
+      const { allowPasswordChange, uid, email, provider } = data.user!
+      setCurrentUser!({ uid })
+
       client.writeQuery<MeQuery>({
         query: MeDocument,
         data: {
-          me: data.user
+          me: {
+            allowPasswordChange,
+            uid,
+            email,
+            provider,
+            __typename: 'User'
+          }
         }
       })
 
-      setAccessToken(data['access-token'])
+      setAccessToken(data.accessToken)
       history.push('/')
 
     } else {
-      setErrors(data.errors)
+      setErrors(data.errors.full_messages)
     }
   }
 
   return <div>
-    <h1>Login Page</h1>
+    <h1>Register</h1>
     <form onSubmit={onSubmit} >
       <Errors errors={errors} />
       <div>
@@ -49,7 +62,7 @@ export const Login: React.FC<RouteComponentProps> = ({ history }) => {
           setPassword(e.target.value)
         }} />
       </div>
-      <button type="submit">Login</button>
+      <button type="submit">Sign Up</button>
     </form>
   </div>
 }

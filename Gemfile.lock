@@ -1,7 +1,7 @@
 PATH
   remote: ../devise_jwt_auth
   specs:
-    devise_jwt_auth (0.1.4)
+    devise_jwt_auth (0.1.5)
       devise (> 3.5.2, < 5)
       jwt (~> 2.1)
       rails (>= 4.2.0, < 6.1)

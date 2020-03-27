@@ -1,23 +1,17 @@
 import React, { useState, useContext } from 'react'
-import { /**RouteComponentProps, */ useHistory, Redirect } from 'react-router'
-import { setAccessToken /**, getAccessToken */ } from '../utils/accessToken'
+import { useHistory } from 'react-router'
+import { setAccessToken } from '../utils/accessToken'
 //import { signIn } from '../utils/authentication'
 import { AuthContext } from '../components/AuthProvider'
 import { MeDocument, MeQuery } from '../generated/graphql'
 import { Errors } from '../components/Errors'
 
 export const SignIn: React.FC = () => {
-  const { signIn, client, currentUser, setCurrentUser } = useContext(AuthContext)
+  const { signIn, client, setCurrentUser } = useContext(AuthContext)
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [errors, setErrors] = useState<string[]>([])
   const history = useHistory()
-
-  let loggedIn = currentUser !== null
-
-  if (loggedIn) {
-    return <Redirect to="/" />
-  }
 
   const onSubmit = async (e:any) => {
     e.preventDefault()

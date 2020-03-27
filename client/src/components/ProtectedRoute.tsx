@@ -15,25 +15,19 @@ export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
   authenticationPath,
   ...rest
 }) => {
-  console.log("ProtectedRoute rendered...");
-  
-  let redirectPath = '';
+  let redirectPath = ''
   if (!isAuthenticated) {
-    redirectPath = authenticationPath;
+    redirectPath = authenticationPath
   }
   if (isAuthenticated && !isAllowed) {
-    redirectPath = restrictedPath;
+    redirectPath = restrictedPath
   }
 
   if (redirectPath) {
-    
-    console.log("redirect with component returned");
-
     const renderComponent = () => <Redirect to={redirectPath} />
+
     return <Route {...rest} component={renderComponent} render={undefined} />
   } else {
-    console.log("Empty redirectPath returned");
-    
     return <Route {...rest} />
   }
 }

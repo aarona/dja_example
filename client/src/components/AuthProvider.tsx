@@ -1,8 +1,8 @@
 import React, { createContext, useContext, useState } from 'react'
-import { IAuthState, defaultAuthState, User } from '../utils/authentication'
+import { AuthState, defaultAuthState, User } from '../utils/authentication'
 import { ApolloProvider } from '@apollo/react-hooks'
 
-export const AuthContext = createContext<IAuthState>(defaultAuthState)
+export const AuthContext = createContext<AuthState>(defaultAuthState)
 
 interface AuthContextProps { }
 

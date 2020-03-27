@@ -8,7 +8,7 @@ const mountPoint = "/auth"
 const endPoint = `${host}${mountPoint}`
 const accessTokenName = 'access-token'
 
-export const defaultAuthState: IAuthState = {
+export const defaultAuthState: AuthState = {
   currentUser: null,
   setCurrentUser: null,
   client,
@@ -23,7 +23,7 @@ export type Client = ApolloClient<NormalizedCacheObject>
 export type User = null | { uid: string }
 export type SetUser = null | React.Dispatch<React.SetStateAction<User>>
 
-export interface IAuthState {
+export interface AuthState {
   currentUser: User
   setCurrentUser: SetUser
   client: Client

@@ -70,6 +70,7 @@ export const signUp = async (email: string, password: string, passwordConfirmati
 
   return fetch(`${endPoint}`, {
     method: 'POST',
+    credentials: 'include',
     headers: {
       'Content-Type': 'application/json'
     },

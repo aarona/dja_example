@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useContext } from 'react'
 import './App.css'
 import Routes from './Routes'
-import { setAccessToken } from './utils/accessToken'
-import { refreshTokenResponse } from './utils/authentication'
-import { AuthContext } from './components/AuthProvider'
+import { setAccessToken } from './utils'
+import { refreshTokenResponse } from './utils'
+import { AuthContext } from './components'
 
 interface AppProps {
 

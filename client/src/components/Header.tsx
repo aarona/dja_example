@@ -50,3 +50,5 @@ export const Header: React.FC<HeaderProps> = () => {
     {body}
   </header>
 }
+
+export default Header

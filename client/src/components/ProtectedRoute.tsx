@@ -1,5 +1,6 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import { Route, RouteProps, Redirect } from 'react-router-dom';
+import { AuthContext } from './AuthProvider';
 
 export interface ProtectedRouteProps extends RouteProps {
   isAuthenticated: boolean
@@ -15,6 +16,7 @@ export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
   authenticationPath,
   ...rest
 }) => {
+  const { setMessages } = useContext(AuthContext)
   let redirectPath = ''
   if (!isAuthenticated) {
     redirectPath = authenticationPath
@@ -24,6 +26,9 @@ export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
   }
 
   if (redirectPath) {
+    console.log("Unauthorized! Redirecting...");
+    
+    setMessages!(['You are not authorized to view that page.'])
     const renderComponent = () => <Redirect to={redirectPath} />
 
     return <Route {...rest} component={renderComponent} render={undefined} />
@@ -31,3 +36,5 @@ export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
     return <Route {...rest} />
   }
 }
+
+export default ProtectedRoute

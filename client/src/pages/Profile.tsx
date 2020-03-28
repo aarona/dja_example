@@ -1,6 +1,6 @@
 import React, { useContext } from 'react'
 //import { useMeQuery } from '../generated/graphql'
-import { AuthContext } from '../components/AuthProvider'
+import { AuthContext } from '../components'
 
 interface ProfileProps {
 
@@ -30,3 +30,5 @@ export const Profile: React.FC<ProfileProps> = () => {
     <div>Email: {currentUser?.uid}</div>
   </div>
 }
+
+export default Profile

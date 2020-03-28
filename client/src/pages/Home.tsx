@@ -1,5 +1,6 @@
 import React, { useContext } from 'react'
-import { AuthContext } from '../components/AuthProvider'
+import { AuthContext } from '../components'
+import { Link } from 'react-router-dom'
 
 interface HomeProps {
 
@@ -18,5 +19,8 @@ export const Home: React.FC<HomeProps> = () => {
   return <div>
     <h1>Home Page</h1>
     <div>{ body }</div>
+    <div>Test an <Link to="/unauthorized">Unauthorized link</Link>.</div>
   </div>
 }
+
+export default Home

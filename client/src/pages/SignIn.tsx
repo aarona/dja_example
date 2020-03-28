@@ -1,13 +1,11 @@
 import React, { useState, useContext } from 'react'
 import { useHistory } from 'react-router'
-import { setAccessToken } from '../utils/accessToken'
-//import { signIn } from '../utils/authentication'
-import { AuthContext } from '../components/AuthProvider'
+import { AuthContext, Errors } from '../components'
 import { MeDocument, MeQuery } from '../generated/graphql'
-import { Errors } from '../components/Errors'
+import { signIn, setAccessToken } from '../utils'
 
 export const SignIn: React.FC = () => {
-  const { signIn, client, setCurrentUser } = useContext(AuthContext)
+  const { client, setCurrentUser } = useContext(AuthContext)
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [errors, setErrors] = useState<string[]>([])
@@ -21,6 +19,8 @@ export const SignIn: React.FC = () => {
     if(data.accessToken)
     {
       const { allowPasswordChange, uid, email, provider } = data.user!
+      console.log("Setting User...");
+      
       setCurrentUser!({ uid })
 
       client.writeQuery<MeQuery>({
@@ -62,3 +62,5 @@ export const SignIn: React.FC = () => {
     </form>
   </div>
 }
+
+export default SignIn

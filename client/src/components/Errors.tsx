@@ -16,3 +16,5 @@ export const Errors: React.FC<ErrorsProps> = ({ errors }) => {
     </div>
   }
 }
+
+export default Errors

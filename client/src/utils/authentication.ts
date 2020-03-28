@@ -12,25 +12,32 @@ export const defaultAuthState: AuthState = {
   currentUser: null,
   setCurrentUser: null,
   client,
-  signIn: async (email: string, password: string) => { return signIn(email, password) },
-  signOut: async (accessToken: string) => { return signOut(accessToken) },
-  signUp: async (email: string, password: string) => { return signUp(email, password) },
-  refreshToken: async () => { return refreshTokenResponse() }
+  messages: null,
+  setMessages: null,
+  // signIn: async (email: string, password: string) => { return signIn(email, password) },
+  // signOut: async (accessToken: string) => { return signOut(accessToken) },
+  // signUp: async (email: string, password: string) => { return signUp(email, password) },
+  // refreshToken: async () => { return refreshTokenResponse() }
 }
 
 export type Client = ApolloClient<NormalizedCacheObject>
+export type Dispatch<T> = React.Dispatch < React.SetStateAction < T >>
 
 export type User = null | { uid: string }
-export type SetUser = null | React.Dispatch<React.SetStateAction<User>>
+export type SetUser = null | Dispatch<User>
+export type Messages = null | string[]
+export type SetMessages = null | Dispatch<string[]>
 
 export interface AuthState {
   currentUser: User
   setCurrentUser: SetUser
   client: Client
-  refreshToken: () => Promise<RefreshTokenResponse>
-  signIn: (email: string, password: string) => Promise<SignInResponse>
-  signOut: (accessToken: string) => Promise<SignOutResponse>
-  signUp: (email: string, password: string) => Promise<SignUpResponse>
+  messages: Messages
+  setMessages: SetMessages
+  // refreshToken: () => Promise<RefreshTokenResponse>
+  // signIn: (email: string, password: string) => Promise<SignInResponse>
+  // signOut: (accessToken: string) => Promise<SignOutResponse>
+  // signUp: (email: string, password: string) => Promise<SignUpResponse>
 }
 
 export interface UserResponse {

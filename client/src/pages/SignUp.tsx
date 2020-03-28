@@ -1,10 +1,9 @@
 import React, { useState, useContext } from 'react'
 import { RouteComponentProps, Redirect } from 'react-router'
-import { setAccessToken } from '../utils/accessToken'
+import { setAccessToken, signUp } from '../utils'
 import { MeDocument, MeQuery } from '../generated/graphql'
-import { signUp } from '../utils/authentication'
-import { AuthContext } from '../components/AuthProvider'
-import { Errors } from '../components/Errors'
+import { AuthContext } from '../components'
+import { Errors } from '../components'
 
 export const SignUp: React.FC<RouteComponentProps> = ({ history }) => {
   const { currentUser, setCurrentUser, client } = useContext(AuthContext)
@@ -66,3 +65,5 @@ export const SignUp: React.FC<RouteComponentProps> = ({ history }) => {
     </form>
   </div>
 }
+
+export default SignUp

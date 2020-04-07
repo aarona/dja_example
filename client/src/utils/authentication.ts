@@ -1,44 +1,10 @@
-import { ApolloClient } from 'apollo-client'
-import { NormalizedCacheObject } from 'apollo-cache-inmemory'
-import { client } from './gqlClients'
+import { User } from "../types"
 
 // configuration
 const host = "http://localhost:3001"
 const mountPoint = "/auth"
 const endPoint = `${host}${mountPoint}`
 const accessTokenName = 'access-token'
-
-export const defaultAuthState: AuthState = {
-  currentUser: null,
-  setCurrentUser: null,
-  client,
-  messages: null,
-  setMessages: null,
-  // signIn: async (email: string, password: string) => { return signIn(email, password) },
-  // signOut: async (accessToken: string) => { return signOut(accessToken) },
-  // signUp: async (email: string, password: string) => { return signUp(email, password) },
-  // refreshToken: async () => { return refreshTokenResponse() }
-}
-
-export type Client = ApolloClient<NormalizedCacheObject>
-export type Dispatch<T> = React.Dispatch < React.SetStateAction < T >>
-
-export type User = null | { uid: string }
-export type SetUser = null | Dispatch<User>
-export type Messages = null | string[]
-export type SetMessages = null | Dispatch<string[]>
-
-export interface AuthState {
-  currentUser: User
-  setCurrentUser: SetUser
-  client: Client
-  messages: Messages
-  setMessages: SetMessages
-  // refreshToken: () => Promise<RefreshTokenResponse>
-  // signIn: (email: string, password: string) => Promise<SignInResponse>
-  // signOut: (accessToken: string) => Promise<SignOutResponse>
-  // signUp: (email: string, password: string) => Promise<SignUpResponse>
-}
 
 export interface UserResponse {
   allowPasswordChange: boolean,
@@ -69,6 +35,11 @@ export interface SignUpResponse {
   user: null | UserResponse
   accessToken?: string
   errors?: any
+}
+
+interface UserPrivileges {
+  isAuthenticated: boolean
+  isAllowed: boolean
 }
 
 export const signUp = async (email: string, password: string, passwordConfirmation?: string) => {
@@ -209,5 +180,27 @@ export const refreshTokenResponse = async () => {
       errors: data.errors,
       accessToken: ''
     } as RefreshTokenResponse
+  }
+}
+
+export const userPrivileges = (currentUser: User) => {
+  if (currentUser) {
+
+    // simulates roles
+    const userHasRole = (currentUser: User, role: string) => {
+      // todo: get roles from User later
+      const roles = ['USER']
+      return roles.includes(role)
+    }
+
+    return {
+      isAuthenticated: true,
+      isAllowed: userHasRole(currentUser, 'ADMIN'),
+    } as UserPrivileges
+  } else {
+    return {
+      isAuthenticated: false,
+      isAllowed: false,
+    } as UserPrivileges
   }
 }

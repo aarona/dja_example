@@ -10,6 +10,8 @@ interface AppProps {
 }
 
 export const App: React.FC<AppProps> = () => {
+  // console.log("Render App...");
+  
   const [loading, setLoading] = useState(true)
   const { setCurrentUser } = useContext(AuthContext)
 

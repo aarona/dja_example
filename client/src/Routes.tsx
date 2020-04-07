@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from 'react'
+import React /**, { useContext, useEffect }*/ from 'react'
 import {
   BrowserRouter,
   Route,
@@ -13,78 +13,68 @@ import {
   UnauthorizedPage
 } from './pages'
 import {
-  Header,
+  PageContainer,
   ProtectedRoute,
-  AuthContext,
+  // AuthContext,
   UnauthenticatedRoute,
-  AuthenticatedRoute,
-  Messages
+  AuthenticatedRoute
 } from './components'
+// import { User } from './types'
 
-export const Routes: React.FC = () => {
-  const { currentUser, messages } = useContext(AuthContext)
-  const isAuthenticated = currentUser !== null
-  const isAllowed = false
-  let userMessages:string[] = []
-  console.log("Messages: ", messages);
+const Routes: React.FC = () => {
+  // console.log("Render Routes...");
   
-  if(messages) {
-    userMessages = messages
-  }
-
-  useEffect(() => {
-    /** */
-    console.log("Loading messages...");
-    //setMessages!([])
-    
-  }, [])
-  console.log("isAuthenticated: ", isAuthenticated);
+  // const { currentUser } = useContext(AuthContext)
+  // console.log("currentUser: ", currentUser);
+  // 
+  // // simulates roles
+  // const getUserRole = (currentUser: User) => {
+  //   return 'USER'
+  // }
+  // 
+  // const isAuthenticated = currentUser !== null
+  // const isAllowed = getUserRole(currentUser) === 'ADMIN'
+  // const authenticationPath = isAuthenticated ? '/profile' : '/sign-in'
   
   return <BrowserRouter>
-    <div>
-      <Header />
-      <Messages messages={userMessages}/>
-      <Switch>
-        <Route exact path="/" component={Home} />
-        <UnauthenticatedRoute
-          authenticationPath="/profile"
-          isAuthenticated={isAuthenticated}
-          exact
-          path="/sign-up"
-          component={SignUp}
-        />
-        <UnauthenticatedRoute
-          authenticationPath="/profile"
-          isAuthenticated={isAuthenticated}
-          exact
-          path="/sign-in"
-          component={SignIn}
-        />
-        <UnauthenticatedRoute
-          exact
-          path="/sign-out"
-          isAuthenticated={isAuthenticated}
-          authenticationPath="/sign-in"
-          component={SignOut}
-        />
-        <AuthenticatedRoute
-          exact
-          path="/profile"
-          isAuthenticated={isAuthenticated}
-          authenticationPath="/sign-in"
-          component={Profile}
-        />
-        <ProtectedRoute
-          exact
-          path="/unauthorized"
-          isAuthenticated={isAuthenticated}
-          isAllowed={isAllowed}
-          authenticationPath="/sign-in"
-          restrictedPath="/profile"
-          component={UnauthorizedPage}
-        />
-      </Switch>
-    </div>
+    <Switch>
+      <Route
+        exact
+        path="/"
+        render={() => { return <PageContainer><Home /></PageContainer> }}
+      />
+      <UnauthenticatedRoute
+        exact
+        path="/sign-up"
+        render={() => { return <PageContainer><SignUp/></PageContainer> }}
+      />
+      <UnauthenticatedRoute
+        exact
+        path="/sign-in"
+        render={() => { return <PageContainer><SignIn/></PageContainer> }}
+      />
+      <UnauthenticatedRoute
+        exact
+        path="/sign-out"
+        render={() => { return <PageContainer><SignOut/></PageContainer> }}
+      />
+      <AuthenticatedRoute
+        exact
+        path="/profile"
+        render={() => { return <PageContainer><Profile/></PageContainer> }}
+      />
+      <ProtectedRoute
+        exact
+        path="/unauthorized"
+        // isAuthenticated={isAuthenticated}
+        // isAllowed={isAllowed}
+        // authenticationPath={authenticationPath}
+        // restrictedPath={authenticationPath}
+        render={() => {
+          return <PageContainer><UnauthorizedPage/></PageContainer>
+        }}
+      />
+    </Switch>
   </BrowserRouter>
 }
 

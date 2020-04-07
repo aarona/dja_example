@@ -6,9 +6,11 @@ interface ProfileProps {
 
 }
 
-export const Profile: React.FC<ProfileProps> = () => {
-  const { currentUser } = useContext(AuthContext)
+const Profile: React.FC<ProfileProps> = () => {
+  // console.log("Render Profile...");
 
+  const { currentUser } = useContext(AuthContext)
+  
   /*
   const { data, loading, error } = useMeQuery()
 

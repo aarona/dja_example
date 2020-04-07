@@ -8,7 +8,7 @@ interface SignOutProps {
 
 }
 
-export const SignOut: React.FC<SignOutProps> = () => {
+const SignOut: React.FC<SignOutProps> = () => {
   const { setCurrentUser, client } = useContext(AuthContext)
 
   try {

@@ -1,5 +1,6 @@
 import { getAccessToken, setAccessToken } from './accessToken'
 import { signIn, signOut, signUp, refreshTokenResponse } from './authentication'
+import { client } from './gqlClients'
 
 export {
   getAccessToken,
@@ -7,5 +8,6 @@ export {
   signIn,
   signOut,
   signUp,
-  refreshTokenResponse
+  refreshTokenResponse,
+  client
 }

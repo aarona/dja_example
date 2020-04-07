@@ -6,7 +6,9 @@ interface HomeProps {
 
 }
 
-export const Home: React.FC<HomeProps> = () => {
+const Home: React.FC<HomeProps> = () => {
+  // console.log("Render Home...");
+
   const { currentUser } = useContext(AuthContext)
   
   let loggedIn = currentUser !== null

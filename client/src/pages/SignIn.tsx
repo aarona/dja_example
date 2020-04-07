@@ -4,7 +4,9 @@ import { AuthContext, Errors } from '../components'
 import { MeDocument, MeQuery } from '../generated/graphql'
 import { signIn, setAccessToken } from '../utils'
 
-export const SignIn: React.FC = () => {
+const SignIn: React.FC = () => {
+  // console.log("Render SignIn...");
+
   const { client, setCurrentUser } = useContext(AuthContext)
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
@@ -19,8 +21,8 @@ export const SignIn: React.FC = () => {
     if(data.accessToken)
     {
       const { allowPasswordChange, uid, email, provider } = data.user!
-      console.log("Setting User...");
       
+      console.log("setCurrentUser: ", { uid });
       setCurrentUser!({ uid })
 
       client.writeQuery<MeQuery>({
@@ -36,6 +38,7 @@ export const SignIn: React.FC = () => {
         }
       })
 
+      // console.log("setAccessToken");
       setAccessToken(data.accessToken)
       history.push('/profile')
 

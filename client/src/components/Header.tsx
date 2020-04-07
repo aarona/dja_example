@@ -1,18 +1,19 @@
 import React, { useContext } from 'react'
 import { Link } from 'react-router-dom'
 import { useHistory } from 'react-router'
-import { setAccessToken, getAccessToken } from '../utils/accessToken'
+import { setAccessToken, getAccessToken, signOut } from '../utils'
 // import { useMeQuery } from '../generated/graphql'
-import { AuthContext } from './AuthProvider'
+import { AuthContext } from '.'
 
 interface HeaderProps {
 }
 
 export const Header: React.FC<HeaderProps> = () => {
-  // console.log("RENDERING HEADER...");
+  // console.log("Render Header...");
+
   const history = useHistory()
   //const { data, loading, client } = useMeQuery()
-  const { currentUser, setCurrentUser, signOut, client } = useContext(AuthContext)
+  const { currentUser, setCurrentUser, client } = useContext(AuthContext)
 
   let body = null
   let loggedIn = currentUser !== null

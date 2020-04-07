@@ -1,11 +1,18 @@
-import React from 'react'
+import React, { useContext } from 'react'
+import { MessageContext } from '.';
 
 interface MessagesProps {
-  messages?: string[]
+  //messages: null | string[]
 }
 
-export const Messages: React.FC<MessagesProps> = ({ messages }) => {
-  console.log("messages: ", messages);
+const Messages: React.FC<MessagesProps> = () => {
+  // console.log("Render Messages...");
+  
+  const { messages, setMessages } = useContext(MessageContext)
+
+  if (messages && messages.length > 0) {
+    setMessages!([])
+  }
   
   if(!messages || (messages && messages.length === 0)) {
     return <></>

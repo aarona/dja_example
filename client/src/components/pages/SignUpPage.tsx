@@ -1,10 +1,10 @@
 import React, { useState, useContext } from 'react'
 import { useHistory } from 'react-router'
-import { setAccessToken, signUp } from '../utils'
-import { MeDocument, MeQuery } from '../generated/graphql'
-import { AuthContext, Errors } from '../components'
+import { setAccessToken, signUp } from '../../utils'
+import { MeDocument, MeQuery } from '../../generated/graphql'
+import { AuthContext, Errors } from '..'
 
-const SignUp: React.FC = () => {
+const SignUpPage: React.FC = () => {
   const history = useHistory()
   const { setCurrentUser, client } = useContext(AuthContext)
   const [email, setEmail] = useState('')
@@ -18,7 +18,7 @@ const SignUp: React.FC = () => {
 
     if (data.accessToken) {
       const { allowPasswordChange, uid, email, provider } = data.user!
-      setCurrentUser!({ uid })
+      setCurrentUser!({uid, provider, email, allowPasswordChange })
 
       client.writeQuery<MeQuery>({
         query: MeDocument,
@@ -60,4 +60,4 @@ const SignUp: React.FC = () => {
   </div>
 }
 
-export default SignUp
+export default SignUpPage

@@ -6,8 +6,7 @@ import { TokenRefreshLink } from 'apollo-link-token-refresh'
 import { InMemoryCache } from 'apollo-cache-inmemory'
 import jwtDecode from 'jwt-decode'
 import { getAccessToken, setAccessToken } from './accessToken'
-import { refreshToken } from './authentication'
-
+import { refreshToken } from './djaAuthentication'
 
 const cache = new InMemoryCache({})
 
@@ -18,15 +17,12 @@ const requestLink = new ApolloLink((operation, forward) =>
       .then(operation => {
         const accessToken = getAccessToken()
         if (accessToken) {
+          console.log("accessToken: ", accessToken);
+          console.log("Setting access-token header...")
           operation.setContext({
             headers: {
               'access-token': accessToken
             }
-            // TODO: use authorization/bearer for a more standard way
-            // of authenticating through headers.
-            // headers: {
-            //   authorization: `bearer ${accessToken}`
-            // }
           })
         }
       })
@@ -49,57 +45,41 @@ export const client = new ApolloClient({
   link: ApolloLink.from([new TokenRefreshLink({
     accessTokenField: 'access-token',
     isTokenValidOrUndefined: () => {
-      // console.log("isTokenValidOrUndefined: called")
-
       const token = getAccessToken()
 
       if (!token) {
-        // console.log("isTokenValidOrUndefined: access token undefined.")
-
         return true
       }
-
-      // console.log("isTokenValidOrUndefined: access token defined. Checking expiration...");
 
       try {
         const { exp } = jwtDecode(token)
         if (Date.now() >= exp * 1000) {
-          // console.log("isTokenValidOrUndefined: access token expired!");
           return false
         } else {
-          // console.log("isTokenValidOrUndefined: access token still valid!");
           return true
         }
       } catch (error) {
-        // console.log("isTokenValidOrUndefined: error occured!");
         return false
       }
     },
     fetchAccessToken: () => {
-      // console.log("fetchAccessToken: called")
-
       return refreshToken()
     },
     handleFetch: accessToken => {
-      // console.log("handleFetch: called")
-
       setAccessToken(accessToken)
     },
     handleError: err => {
-      // console.warn('handleError: Your refresh token is invalid. Try to relogin')
-      // console.error(err)
+      console.error(err)
     }
   }),
-  onError(({ graphQLErrors, networkError }) => {
-    // console.log("onError: called");
-    // console.log(graphQLErrors)
-    // console.log(networkError)
+  onError((errorObj) => {
+    console.error(errorObj)
   }),
     requestLink,
-    new HttpLink({
-      uri: "http://localhost:3001/graphql",
-      credentials: "include"
-    })
+  new HttpLink({
+    uri: "http://localhost:3001/graphql",
+    credentials: "include"
+  })
   ]),
   cache
 })

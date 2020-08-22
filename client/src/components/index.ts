@@ -1,31 +1,35 @@
-import Errors from './Errors'
-import Header from './Header'
-import Messages from './Messages'
-import PageContainer from './PageContainer'
+import {
+  Errors,
+  FlashMessages,
+  Header,
+  Messages,
+  PageContainer
+} from './layouts'
+
+import Alert from './Alert'
 
 import {
-  AuthenticatedRoute,
   ProtectedRoute,
-  UnauthenticatedRoute
-} from './routes'
+  RouteIndex,
+  RouteWithSubRoutes
+}
+ from './routes'
 
 import {
   AuthContext,
-  AuthProvider,
-  MessageContext,
-  MessageProvider
+  AuthProvider
 } from './contexts'
 
 export {
-  AuthenticatedRoute,
+  Alert,
   AuthProvider,
   AuthContext,
   Errors,
+  FlashMessages,
   Header,
   Messages,
-  MessageContext,
-  MessageProvider,
   PageContainer,
   ProtectedRoute,
-  UnauthenticatedRoute
+  RouteIndex,
+  RouteWithSubRoutes
 }

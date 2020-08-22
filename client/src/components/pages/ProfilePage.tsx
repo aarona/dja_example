@@ -1,12 +1,8 @@
 import React, { useContext } from 'react'
 //import { useMeQuery } from '../generated/graphql'
-import { AuthContext } from '../components'
+import { AuthContext } from '..'
 
-interface ProfileProps {
-
-}
-
-const Profile: React.FC<ProfileProps> = () => {
+const ProfilePage: React.FC = () => {
   // console.log("Render Profile...");
 
   const { currentUser } = useContext(AuthContext)
@@ -33,4 +29,4 @@ const Profile: React.FC<ProfileProps> = () => {
   </div>
 }
 
-export default Profile
+export default ProfilePage

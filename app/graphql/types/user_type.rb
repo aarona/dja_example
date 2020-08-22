@@ -1,4 +1,7 @@
+# frozen_string_literal: true
+
 module Types
+  # User interface for GraphQL
   class UserType < Types::BaseObject
     field :provider, String, null: false
     field :uid, String, null: false

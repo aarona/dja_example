@@ -1,7 +1,15 @@
 import React, { createContext, useContext, useState } from 'react'
 import { ApolloProvider } from '@apollo/react-hooks'
-import { User, SetUser, Client } from '../../types'
 import { client } from '../../utils'
+import { UserResponse } from '../../utils/djaAuthentication'
+
+import { ApolloClient } from 'apollo-client'
+import { NormalizedCacheObject } from 'apollo-cache-inmemory'
+
+export type Client = ApolloClient<NormalizedCacheObject>
+export type Dispatch<T> = React.Dispatch<React.SetStateAction<T>>
+export type User = null | UserResponse
+export type SetUser = null | Dispatch<User>
 
 export const defaultAuthState: AuthState = {
   currentUser: null,
@@ -20,17 +28,15 @@ export const AuthContext = createContext<AuthState>(defaultAuthState)
 interface AuthContextProps { }
 
 export const AuthProvider: React.FC<AuthContextProps> = ({ children }) => {
-  // console.log("Render AuthProvider...");
-  
-  const ctx  = useContext(AuthContext)
+  const ctx = useContext(AuthContext)
   const [currentUser, setCurrentUser] = useState<User>(null)
 
   ctx.currentUser = currentUser
   ctx.setCurrentUser = setCurrentUser
-  
+
   return <AuthContext.Provider value={ctx}>
     <ApolloProvider client={ctx.client}>
-      { children }
+      {children}
     </ApolloProvider>
   </AuthContext.Provider>
 }

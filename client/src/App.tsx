@@ -1,17 +1,9 @@
 import React, { useState, useEffect, useContext } from 'react'
-import './App.css'
 import Routes from './Routes'
-import { setAccessToken } from './utils'
-import { refreshTokenResponse } from './utils'
+import { setAccessToken, refreshTokenResponse } from './utils'
 import { AuthContext } from './components'
 
-interface AppProps {
-
-}
-
-export const App: React.FC<AppProps> = () => {
-  // console.log("Render App...");
-  
+function App() {
   const [loading, setLoading] = useState(true)
   const { setCurrentUser } = useContext(AuthContext)
 
@@ -22,7 +14,7 @@ export const App: React.FC<AppProps> = () => {
       setCurrentUser!(user)
       setAccessToken(accessToken)
       setLoading(false)
-      
+
     }).catch((error) => {
       setCurrentUser!(null)
       setAccessToken('')
@@ -34,5 +26,7 @@ export const App: React.FC<AppProps> = () => {
     return <div>Loading...</div>
   }
 
-  return <Routes/>;
+  return <Routes />;
 }
+
+export default App;

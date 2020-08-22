@@ -1,12 +1,10 @@
 import React, { useState, useContext } from 'react'
 import { useHistory } from 'react-router'
-import { AuthContext, Errors } from '../components'
-import { MeDocument, MeQuery } from '../generated/graphql'
-import { signIn, setAccessToken } from '../utils'
+import { AuthContext, Errors } from '..'
+import { MeDocument, MeQuery } from '../../generated/graphql'
+import { signIn, setAccessToken } from '../../utils'
 
-const SignIn: React.FC = () => {
-  // console.log("Render SignIn...");
-
+const SignInPage: React.FC = () => {
   const { client, setCurrentUser } = useContext(AuthContext)
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
@@ -23,7 +21,7 @@ const SignIn: React.FC = () => {
       const { allowPasswordChange, uid, email, provider } = data.user!
       
       console.log("setCurrentUser: ", { uid });
-      setCurrentUser!({ uid })
+      setCurrentUser!({allowPasswordChange, email, provider, uid})
 
       client.writeQuery<MeQuery>({
         query: MeDocument,
@@ -63,7 +61,10 @@ const SignIn: React.FC = () => {
       </div>
       <button type="submit">Sign In</button>
     </form>
+    <div>
+      Because you're not signed in, you can test that you're not able to see the <a href="/profile">Profile Page</a>.
+    </div>
   </div>
 }
 
-export default SignIn
+export default SignInPage

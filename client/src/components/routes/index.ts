@@ -1,9 +1,4 @@
-import AuthenticatedRoute from './AuthenticatedRoute'
 import ProtectedRoute from './ProtectedRoute'
-import UnauthenticatedRoute from './UnauthenticatedRoute'
-
-export {
-  AuthenticatedRoute,
-  ProtectedRoute,
-  UnauthenticatedRoute
-}
+import RouteWithSubRoutes from './RouteWithSubRoutes'
+import RouteIndex from './RouteIndex'
+export { ProtectedRoute, RouteIndex, RouteWithSubRoutes }

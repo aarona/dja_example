@@ -1,14 +1,9 @@
 import React, { useContext } from 'react'
-import { AuthContext } from '../components'
+import { AuthContext } from '..'
 import { Link } from 'react-router-dom'
 
-interface HomeProps {
 
-}
-
-const Home: React.FC<HomeProps> = () => {
-  // console.log("Render Home...");
-
+const HomePage: React.FC = () => {
   const { currentUser } = useContext(AuthContext)
   
   let loggedIn = currentUser !== null
@@ -25,4 +20,4 @@ const Home: React.FC<HomeProps> = () => {
   </div>
 }
 
-export default Home
+export default HomePage

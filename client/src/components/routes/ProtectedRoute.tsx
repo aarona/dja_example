@@ -1,44 +1,61 @@
 import React, { useContext } from 'react'
 import { Route, RouteProps, Redirect } from 'react-router-dom';
-import { MessageContext, AuthContext } from '../contexts';
-import { userPrivileges } from '../../utils/authentication';
+import { AuthContext } from '../contexts';
+import { User } from '../contexts/AuthProvider';
 
-export interface ProtectedRouteProps extends RouteProps {
-  // isAuthenticated: boolean
-  // isAllowed: boolean
-  // restrictedPath: string
-  // authenticationPath: string
+interface ProtectedRouteSimpleRuleProps extends RouteProps {
+  requiredAuthenticatedStatus?: AuthenticatedStatus
 }
 
-const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
-  // isAuthenticated,
-  // isAllowed,
-  // restrictedPath,
-  // authenticationPath,
-  ...rest
-}) => {
-  const { setMessages } = useContext(MessageContext)
+interface ProtectedRouteCustomRuleProps extends RouteProps {
+  validator: AuthorizationValidator
+}
+
+export type ProtectedRouteProps = ProtectedRouteSimpleRuleProps | ProtectedRouteCustomRuleProps
+export type AuthenticatedStatus = 'loggedIn' | 'loggedOut' | 'none'
+export type AuthorizationValidator = (user:User ) => boolean
+
+const NOT_AUTHORIZED = "You're not authorized to view that page."
+
+const getDefaults = (props:ProtectedRouteProps) => {
+  let { validator = null } = props as ProtectedRouteCustomRuleProps
+  let {
+    requiredAuthenticatedStatus = 'none' as AuthenticatedStatus
+  } = props as ProtectedRouteSimpleRuleProps
+
+  return { requiredAuthenticatedStatus, validator }
+}
+
+const ProtectedRoute: React.FC<ProtectedRouteProps> = (props) => {
   const { currentUser } = useContext(AuthContext)
-  const { isAuthenticated, isAllowed } = userPrivileges(currentUser)
+  const { requiredAuthenticatedStatus, validator } = getDefaults(props)
 
-  let redirectPath = ''
-
-  if (!isAuthenticated) {
-    redirectPath = '/sign-in'
+  const rejectRequest = (redirectPath: string, message: string = NOT_AUTHORIZED) => {
+    return <Route {...props} render={({ location }) => {
+      return <Redirect to={{
+        pathname: redirectPath,
+        state: {
+          from: location,
+          message
+        }
+      }} />
+    }} />
   }
-  if (isAuthenticated && !isAllowed) {
-    redirectPath = '/profile'
+  
+  if (requiredAuthenticatedStatus === 'loggedIn' && !currentUser) {
+    return rejectRequest('/sign-in')
+  }
+  
+  if (requiredAuthenticatedStatus === 'loggedOut' && currentUser) {
+    return rejectRequest('/profile')
   }
 
-  if (redirectPath) {
-    setMessages!(["You're not authorized to view that page."])
-
-    const renderComponent = () => <Redirect to={redirectPath} />
-
-    return <Route {...rest} component={renderComponent} render={undefined} />
-  } else {
-    return <Route {...rest} />
+  // If a custom validator was passed, check that the user has access to this resource
+  if (validator && !validator(currentUser)) {
+    return currentUser ? rejectRequest('/profile') : rejectRequest('/sign-in')
   }
+
+  return <Route {...props} />
 }
 
 export default ProtectedRoute

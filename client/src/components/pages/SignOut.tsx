@@ -1,14 +1,10 @@
 import React, { useContext } from 'react'
 import { Redirect } from 'react-router';
-import { AuthContext } from '../components';
-import { getAccessToken, setAccessToken } from '../utils';
-import { signOut } from '../utils';
+import { AuthContext } from '..';
+import { getAccessToken, setAccessToken } from '../../utils';
+import { signOut } from '../../utils';
 
-interface SignOutProps {
-
-}
-
-const SignOut: React.FC<SignOutProps> = () => {
+const SignOutPage: React.FC = () => {
   const { setCurrentUser, client } = useContext(AuthContext)
 
   try {
@@ -24,4 +20,4 @@ const SignOut: React.FC<SignOutProps> = () => {
   return <Redirect to="/sign-in"/>
 }
 
-export default SignOut
+export default SignOutPage

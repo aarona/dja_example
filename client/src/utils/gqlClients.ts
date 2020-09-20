@@ -5,8 +5,7 @@ import { onError } from 'apollo-link-error'
 import { TokenRefreshLink } from 'apollo-link-token-refresh'
 import { InMemoryCache } from 'apollo-cache-inmemory'
 import jwtDecode from 'jwt-decode'
-import { getAccessToken, setAccessToken } from './accessToken'
-import { refreshToken } from './djaAuthentication'
+import { getAccessToken, setAccessToken, refreshToken } from './djaAuthentication'
 
 const cache = new InMemoryCache({})
 

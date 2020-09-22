@@ -1,7 +1,6 @@
 import React from 'react'
 import { Route, Switch, RouteProps } from "react-router-dom";
-import ProtectedRoute, { AuthenticatedStatus } from "./ProtectedRoute";
-import { Roles } from "../../utils/authentication";
+import ProtectedRoute, { AuthenticatedStatus, AuthorizationValidator } from "./ProtectedRoute";
 import { Header } from '..';
 import { RouteWithSubRoutes } from '.';
 
@@ -10,8 +9,8 @@ export interface RouteConfig extends RouteProps {
   component?: React.FC
   routeType?: typeof Route | typeof ProtectedRoute
   requiredAuthenticatedStatus?: AuthenticatedStatus,
-  requiredRoles?: Roles
   routes?: RouteConfig[]
+  validator?: AuthorizationValidator
 }
 
 interface RouteIndexProps {

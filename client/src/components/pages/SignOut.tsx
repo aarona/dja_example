@@ -5,10 +5,10 @@ import { getAccessToken, setAccessToken } from '../../utils';
 import { signOut } from '../../utils';
 
 const SignOutPage: React.FC = () => {
-  const { setCurrentUser, client } = useContext(AuthContext)
+  const { useCurrentUser } = useContext(AuthContext)!
+  const [, setCurrentUser] = useCurrentUser
 
   try {
-    client.resetStore()
     signOut(getAccessToken())
     setAccessToken('')
   }
@@ -16,7 +16,7 @@ const SignOutPage: React.FC = () => {
     console.error("Error in SignOut.");
   }
 
-  setCurrentUser!(null)
+  setCurrentUser(null)
   return <Redirect to="/sign-in"/>
 }
 

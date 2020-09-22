@@ -5,7 +5,8 @@ import {
   ProfilePage,
   SignInPage,
   SignOutPage,
-  SignUpPage
+  SignUpPage,
+  UnauthorizedPage
 } from "../components/pages";
 
 export const routes:RouteConfig[] = [
@@ -46,5 +47,13 @@ export const routes:RouteConfig[] = [
     header: Header,
     routeType: ProtectedRoute,
     requiredAuthenticatedStatus: "loggedOut"
+  },
+  {
+    path: "/unauthorized",
+    component: UnauthorizedPage,
+    exact: true,
+    header: Header,
+    routeType: ProtectedRoute,
+    validator: (_) => { return false }
   }
 ];

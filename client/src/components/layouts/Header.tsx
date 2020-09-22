@@ -9,7 +9,8 @@ interface HeaderProps {
 
 export const Header: React.FC<HeaderProps> = () => {
   const history = useHistory()
-  const { currentUser, setCurrentUser, client } = useContext(AuthContext)
+  const { useCurrentUser } = useContext(AuthContext)!
+  const [currentUser, setCurrentUser] = useCurrentUser
 
   let body = null
   let loggedIn = currentUser !== null
@@ -17,14 +18,13 @@ export const Header: React.FC<HeaderProps> = () => {
   const handleLogOut = async (e: any) => {
     e.preventDefault()
     try {
-      client.resetStore()
       await signOut(getAccessToken())
       setAccessToken('')
     }
     catch {
       console.error("Error in Header.handleLogOut.");
     }
-    setCurrentUser!(null)
+    setCurrentUser(null)
 
     history.push({
       pathname: '/sign-in',

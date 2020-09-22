@@ -1,6 +1,6 @@
-import React, { createContext, useContext, useState } from 'react'
+import React, { createContext, useState } from 'react'
 import { ApolloProvider } from '@apollo/react-hooks'
-import { client } from '../../utils'
+import { client, Maybe, UseStateTuple } from '../../utils'
 import { UserResponse } from '../../utils/djaAuthentication'
 
 import { ApolloClient } from 'apollo-client'
@@ -8,34 +8,24 @@ import { NormalizedCacheObject } from 'apollo-cache-inmemory'
 
 export type Client = ApolloClient<NormalizedCacheObject>
 export type Dispatch<T> = React.Dispatch<React.SetStateAction<T>>
-export type User = null | UserResponse
-export type SetUser = null | Dispatch<User>
-
-export const defaultAuthState: AuthState = {
-  currentUser: null,
-  setCurrentUser: null,
-  client,
-}
 
 export interface AuthState {
-  currentUser: User
-  setCurrentUser: SetUser
+  useCurrentUser: UseStateTuple<Maybe<UserResponse>>
   client: Client
 }
 
-export const AuthContext = createContext<AuthState>(defaultAuthState)
+export const AuthContext = createContext<AuthState | null>(null)
 
 interface AuthContextProps { }
 
 export const AuthProvider: React.FC<AuthContextProps> = ({ children }) => {
-  const ctx = useContext(AuthContext)
-  const [currentUser, setCurrentUser] = useState<User>(null)
+  const defaultAuthState: AuthState = {
+    useCurrentUser: useState<Maybe<UserResponse>>(null),
+    client
+  }
 
-  ctx.currentUser = currentUser
-  ctx.setCurrentUser = setCurrentUser
-
-  return <AuthContext.Provider value={ctx}>
-    <ApolloProvider client={ctx.client}>
+  return <AuthContext.Provider value={defaultAuthState}>
+    <ApolloProvider client={defaultAuthState.client}>
       {children}
     </ApolloProvider>
   </AuthContext.Provider>

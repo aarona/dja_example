@@ -5,18 +5,20 @@ import { AuthContext } from './components'
 
 function App() {
   const [loading, setLoading] = useState(true)
-  const { setCurrentUser } = useContext(AuthContext)
+  const { useCurrentUser } = useContext(AuthContext)!
+
+  const [, setCurrentUser] = useCurrentUser
 
   useEffect(() => {
     refreshTokenResponse().then(data => {
       let { user, accessToken } = data
 
-      setCurrentUser!(user)
+      setCurrentUser(user)
       setAccessToken(accessToken)
       setLoading(false)
 
     }).catch((error) => {
-      setCurrentUser!(null)
+      setCurrentUser(null)
       setAccessToken('')
       setLoading(false)
     })

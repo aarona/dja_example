@@ -1,26 +1,35 @@
+import { Maybe } from "./types"
 
 // configuration
-const host = "http://localhost:3001"
-const mountPoint = "/auth"
+const host = process.env.REACT_APP_HOST!
+const mountPoint = process.env.REACT_APP_AUTH_MOUNT_POINT!
 const endPoint = `${host}${mountPoint}`
-const accessTokenName = 'access-token'
+const accessTokenField = process.env.REACT_APP_ACCESS_TOKEN_FIELD!
+
+let accessToken = ""
+
+export const setAccessToken = (token: string) => {
+  accessToken = token
+}
+
+export const getAccessToken = () => {
+  return accessToken
+}
 
 export interface UserResponse {
   uid: string,
-  provider: string,
-  email: string,
   allowPasswordChange: boolean,
 }
 
 export interface RefreshTokenResponse {
   status: string
-  user: null | UserResponse
+  user: Maybe<UserResponse>
   accessToken: string
   errors?: any
 }
 
 export interface SignInResponse {
-  user: null | UserResponse
+  user: Maybe<UserResponse>
   errors?: any
   accessToken?: string
 }
@@ -31,7 +40,7 @@ export interface SignOutResponse {
 
 export interface SignUpResponse {
   status: string
-  user: null | UserResponse
+  user: Maybe<UserResponse>
   accessToken?: string
   errors?: any
 }
@@ -59,7 +68,7 @@ export const signUp = async (
   }).then((response) => {
     return response.json()
   }).then((response) => {
-    const accessToken = response[accessTokenName]
+    const accessToken = response[accessTokenField]
 
     if (response && accessToken) {
       const user = parseUserResponse(response.data)
@@ -90,7 +99,7 @@ export const signIn = async (
   }).then((response) => {
     return response.json()
   }).then((response) => {
-    const accessToken = response[accessTokenName]
+    const accessToken = response[accessTokenField]
 
     if (response && accessToken) {
       const user = parseUserResponse(response.data)
@@ -108,7 +117,7 @@ export const signOut = async (accessToken: string) => {
     credentials: 'include',
     headers: {
       'Content-Type': 'application/json',
-      'access-token': accessToken
+      [accessTokenField]: accessToken
     },
   }).then((response) => {
     return response.json()
@@ -130,7 +139,7 @@ export const refreshTokenResponse = async () => {
   const response = await refreshToken()
   let data = await response.json()
   const { status } = data
-  const accessToken = data[accessTokenName]
+  const accessToken = data[accessTokenField]
 
   if (data && accessToken) {
     const user = parseUserResponse(data.data)
@@ -148,6 +157,6 @@ const parseUserResponse = (data: any): UserResponse => {
     uid: data.uid,
     provider: data.provider,
     email: data.email,
-    allowPasswordChange: data.allow_password_change,
+    allowPasswordChange: data.allow_password_change
   } as UserResponse
 }

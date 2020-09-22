@@ -1,12 +1,12 @@
 import React, { useState, useContext } from 'react'
 import { useHistory } from 'react-router'
 import { setAccessToken, signUp } from '../../utils'
-import { MeDocument, MeQuery } from '../../generated/graphql'
 import { AuthContext, Errors } from '..'
 
 const SignUpPage: React.FC = () => {
   const history = useHistory()
-  const { setCurrentUser, client } = useContext(AuthContext)
+  const { useCurrentUser } = useContext(AuthContext)!
+  const [, setCurrentUser] = useCurrentUser
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [errors, setErrors] = useState<string[]>([])
@@ -17,21 +17,8 @@ const SignUpPage: React.FC = () => {
     const data = await signUp(email, password)
 
     if (data.accessToken) {
-      const { allowPasswordChange, uid, email, provider } = data.user!
-      setCurrentUser!({uid, provider, email, allowPasswordChange })
-
-      client.writeQuery<MeQuery>({
-        query: MeDocument,
-        data: {
-          me: {
-            allowPasswordChange,
-            uid,
-            email,
-            provider,
-            __typename: 'User'
-          }
-        }
-      })
+      const { allowPasswordChange, uid } = data.user!
+      setCurrentUser({uid, allowPasswordChange })
 
       setAccessToken(data.accessToken)
       history.push('/')

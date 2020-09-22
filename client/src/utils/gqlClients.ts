@@ -5,10 +5,11 @@ import { onError } from 'apollo-link-error'
 import { TokenRefreshLink } from 'apollo-link-token-refresh'
 import { InMemoryCache } from 'apollo-cache-inmemory'
 import jwtDecode from 'jwt-decode'
-import { getAccessToken, setAccessToken } from './accessToken'
-import { refreshToken } from './djaAuthentication'
+import { getAccessToken, refreshToken, setAccessToken } from './djaAuthentication'
 
 const cache = new InMemoryCache({})
+const host = process.env.REACT_APP_HOST!
+const accessTokenField = process.env.REACT_APP_ACCESS_TOKEN_FIELD!
 
 const requestLink = new ApolloLink((operation, forward) =>
   new Observable(observer => {
@@ -17,11 +18,9 @@ const requestLink = new ApolloLink((operation, forward) =>
       .then(operation => {
         const accessToken = getAccessToken()
         if (accessToken) {
-          console.log("accessToken: ", accessToken);
-          console.log("Setting access-token header...")
           operation.setContext({
             headers: {
-              'access-token': accessToken
+              [accessTokenField]: accessToken
             }
           })
         }
@@ -33,7 +32,9 @@ const requestLink = new ApolloLink((operation, forward) =>
           complete: observer.complete.bind(observer),
         })
       })
-      .catch(observer.error.bind(observer))
+      .catch(() => {
+        observer.error.bind(observer)
+      })
 
     return () => {
       if (handle) handle.unsubscribe()
@@ -43,7 +44,7 @@ const requestLink = new ApolloLink((operation, forward) =>
 
 export const client = new ApolloClient({
   link: ApolloLink.from([new TokenRefreshLink({
-    accessTokenField: 'access-token',
+    accessTokenField: accessTokenField,
     isTokenValidOrUndefined: () => {
       const token = getAccessToken()
 
@@ -65,6 +66,12 @@ export const client = new ApolloClient({
     fetchAccessToken: () => {
       return refreshToken()
     },
+    handleResponse: (_, accessTokenField) => (response: Response) => {
+      return response.text().then((body) => {
+        const data = JSON.parse(body)
+        return { [accessTokenField]: data[accessTokenField] }
+      })
+    },
     handleFetch: accessToken => {
       setAccessToken(accessToken)
     },
@@ -77,7 +84,7 @@ export const client = new ApolloClient({
   }),
     requestLink,
   new HttpLink({
-    uri: "http://localhost:3001/graphql",
+    uri: `${host}/graphql`,
     credentials: "include"
   })
   ]),

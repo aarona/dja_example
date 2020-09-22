@@ -1,11 +1,11 @@
 import React, { useState, useContext } from 'react'
 import { useHistory } from 'react-router'
 import { AuthContext, Errors } from '..'
-import { MeDocument, MeQuery } from '../../generated/graphql'
 import { signIn, setAccessToken } from '../../utils'
 
 const SignInPage: React.FC = () => {
-  const { client, setCurrentUser } = useContext(AuthContext)
+  const { useCurrentUser } = useContext(AuthContext)!
+  const [, setCurrentUser] = useCurrentUser
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [errors, setErrors] = useState<string[]>([])
@@ -18,27 +18,17 @@ const SignInPage: React.FC = () => {
 
     if(data.accessToken)
     {
-      const { allowPasswordChange, uid, email, provider } = data.user!
-      
-      console.log("setCurrentUser: ", { uid });
-      setCurrentUser!({allowPasswordChange, email, provider, uid})
+      const { allowPasswordChange, uid } = data.user!
 
-      client.writeQuery<MeQuery>({
-        query: MeDocument,
-        data: {
-          me: {
-            allowPasswordChange,
-            uid,
-            email,
-            provider,
-            __typename: 'User'
-          }
+      setCurrentUser({allowPasswordChange, uid })
+      setAccessToken(data.accessToken)
+
+      history.push({
+        pathname: '/profile',
+        state: {
+          message: 'Sign in successful!'
         }
       })
-
-      // console.log("setAccessToken");
-      setAccessToken(data.accessToken)
-      history.push('/profile')
 
     } else {
       setErrors(data.errors)

@@ -27,8 +27,9 @@ gem 'dotenv'
 
 # Use Rack CORS for handling Cross-Origin Resource Sharing (CORS), making cross-origin AJAX possible
 gem 'devise'
-# gem 'devise_jwt_auth'
-gem 'devise_jwt_auth', path: '../devise_jwt_auth'
+
+gem 'devise_jwt_auth', '~> 0.1.7'
+# gem 'devise_jwt_auth', path: '../devise_jwt_auth'
 gem 'graphql'
 gem 'graphql-rails_logger'
 gem 'rack-cors'

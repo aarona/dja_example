@@ -6,7 +6,7 @@ DeviseJwtAuth.setup do |config|
   # use the HTTP only refresh cookie that is sent during the authentication
   # process and make refresh token requests.
   # config.send_new_access_token_on_each_request = false
-  
+
   # By default, refresh token HTTP Only cookies last for 2 weeks. These tokens
   # are used for requesting shorter-lived acccess tokens.
   # config.refresh_token_lifespan = 2.weeks
@@ -15,7 +15,7 @@ DeviseJwtAuth.setup do |config|
   # access protected resources. When these tokens expire, you need to
   # reauthenticate the user or use a refresh token cookie to get a new access
   # token.
-  config.access_token_lifespan = 15.minutes
+  # config.access_token_lifespan = 15.minutes
 
   # This is the name of the HTTP Only cookie that will be sent to the client
   # for the purpose of requesting new access tokens.
@@ -31,12 +31,12 @@ DeviseJwtAuth.setup do |config|
   # This is the refresh token encryption key. You should set this in an
   # environment variable or secret key base that isn't store in a repository.
   # Also, its a good idea to NOT use the same key for access tokens.
-  config.refresh_token_encryption_key = 'your-refresh-token-secret-key-here'
-  
+  config.refresh_token_encryption_key = ENV.fetch('REFRESH_TOKEN_ENCRYPTION_KEY', 'default-refresh-token-secret-key')
+
   # This is the refresh token encryption key. You should set this in an
   # environment variable or secret key base that isn't store in a repository.
-  # Also, its a good idea to NOT use the same key for access tokens.
-  config.access_token_encryption_key = 'your-access-token-secret-key-here'
+  # Also, its a good idea to NOT use the same key for refresh tokens.
+  config.access_token_encryption_key = ENV.fetch('ACCESS_TOKEN_ENCRYPTION_KEY', 'default-access-token-secret-key')
 
   # This route will be the prefix for all oauth2 redirect callbacks. For
   # example, using the default '/omniauth', the github oauth2 provider will
@@ -47,7 +47,9 @@ DeviseJwtAuth.setup do |config|
   # Uncomment to enforce current_password param to be checked before all
   # attribute updates. Set it to :password if you want it to be checked only if
   # password is updated.
-  # config.check_current_password_before_update = :attributes
+  # TODO:
+  # :attributes vs. :password
+  config.check_current_password_before_update = :attributes
 
   # By default we will use callbacks for single omniauth.
   # It depends on fields like email, provider and uid.
@@ -65,10 +67,10 @@ DeviseJwtAuth.setup do |config|
 
   # TODO: Document these settings
   # config.default_confirm_success_url               = nil
-  # config.default_password_reset_url                = nil
+  config.default_password_reset_url = 'http://localhost:3000/reset-password'
+
   # config.redirect_whitelist                        = nil
   # config.update_token_version_after_password_reset = true
   # config.bypass_sign_in                            = true
-  # config.require_client_password_reset_token       = false
-
+  config.require_client_password_reset_token = false
 end

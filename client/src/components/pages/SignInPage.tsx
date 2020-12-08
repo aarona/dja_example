@@ -1,5 +1,6 @@
 import React, { useState, useContext } from 'react'
 import { useHistory } from 'react-router'
+import { Link } from 'react-router-dom'
 import { AuthContext, Errors } from '..'
 import { signIn, setAccessToken } from '../../utils'
 
@@ -30,8 +31,12 @@ const SignInPage: React.FC = () => {
         }
       })
 
-    } else {
-      setErrors(data.errors)
+    } else {      
+      if(data.errors?.fullMessages) {
+        setErrors(data.errors.fullMessages)
+      } else {
+        setErrors(['Something went wrong.'])
+      }
     }
   }
 
@@ -49,7 +54,7 @@ const SignInPage: React.FC = () => {
           setPassword(e.target.value)
         }} />
       </div>
-      <button type="submit">Sign In</button>
+      <button type="submit">Sign In</button> Forgot your password? <Link to="/forgot-password">Click here</Link>.
     </form>
     <div>
       Because you're not signed in, you can test that you're not able to see the <a href="/profile">Profile Page</a>.

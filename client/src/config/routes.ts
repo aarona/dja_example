@@ -2,7 +2,9 @@ import { Header, ProtectedRoute } from "../components";
 import { RouteConfig } from "../components/routes/RouteIndex";
 import {
   HomePage,
+  ForgotPasswordPage,
   ProfilePage,
+  ResetPasswordPage,
   SignInPage,
   SignOutPage,
   SignUpPage,
@@ -23,6 +25,22 @@ export const routes:RouteConfig[] = [
     header: Header,
     routeType: ProtectedRoute,
     requiredAuthenticatedStatus: "loggedIn"
+  },
+  {
+    path: "/reset-password",
+    component: ResetPasswordPage,
+    exact: true,
+    header: Header,
+    routeType: ProtectedRoute,
+    requiredAuthenticatedStatus: "loggedOut"
+  },
+  {
+    path: "/forgot-password",
+    component: ForgotPasswordPage,
+    exact: true,
+    header: Header,
+    routeType: ProtectedRoute,
+    requiredAuthenticatedStatus: "loggedOut"
   },
   {
     path: "/sign-in",

@@ -1,5 +1,6 @@
 import React, { useContext } from 'react'
 import { Route, RouteProps, Redirect } from 'react-router-dom';
+import { Maybe } from '../../utils';
 import { UserResponse } from '../../utils/djaAuthentication';
 import { AuthContext } from '../contexts';
 
@@ -13,7 +14,7 @@ interface ProtectedRouteCustomRuleProps extends RouteProps {
 
 export type ProtectedRouteProps = ProtectedRouteSimpleRuleProps | ProtectedRouteCustomRuleProps
 export type AuthenticatedStatus = 'loggedIn' | 'loggedOut' | 'none'
-export type AuthorizationValidator = (user:UserResponse ) => boolean
+export type AuthorizationValidator = (user:Maybe<UserResponse> ) => boolean
 
 const NOT_AUTHORIZED = "You're not authorized to view that page."
 
@@ -52,7 +53,7 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = (props) => {
   }
 
   // If a custom validator was passed, check that the user has access to this resource
-  if (validator && currentUser && !validator(currentUser)) {
+  if (validator && !validator(currentUser)) {
     return currentUser ? rejectRequest('/profile') : rejectRequest('/sign-in')
   }
 

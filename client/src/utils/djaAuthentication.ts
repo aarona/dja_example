@@ -16,22 +16,40 @@ export const getAccessToken = () => {
   return accessToken
 }
 
+export interface ErrorResponse {
+  fullMessages: string[]
+}
+
 export interface UserResponse {
   uid: string,
   allowPasswordChange: boolean,
 }
 
+export interface ChangePasswordResponse {
+  success: boolean
+  user?: UserResponse
+  message: string
+  accessToken: string
+  errors?: ErrorResponse
+}
+
 export interface RefreshTokenResponse {
   status: string
-  user: Maybe<UserResponse>
+  user?: UserResponse
   accessToken: string
-  errors?: any
+  errors?: ErrorResponse
+}
+
+export interface ResetPasswordResponse {
+  success: boolean
+  message: string
+  errors?: ErrorResponse
 }
 
 export interface SignInResponse {
-  user: Maybe<UserResponse>
-  errors?: any
+  user?: UserResponse
   accessToken?: string
+  errors?: ErrorResponse
 }
 
 export interface SignOutResponse {
@@ -40,9 +58,9 @@ export interface SignOutResponse {
 
 export interface SignUpResponse {
   status: string
-  user: Maybe<UserResponse>
+  user?: UserResponse
   accessToken?: string
-  errors?: any
+  errors?: ErrorResponse
 }
 
 export const signUp = async (
@@ -73,11 +91,11 @@ export const signUp = async (
     if (response && accessToken) {
       const user = parseUserResponse(response.data)
 
-      return { user, accessToken } as SignUpResponse
+      return { status: response.status, user, accessToken } as SignUpResponse
     } else {
-      const errors = response.errors
+      const { status, errors} = response.errors
 
-      return { user: null, errors } as SignUpResponse
+      return { status, errors } as SignUpResponse
     }
   })
 }
@@ -95,18 +113,19 @@ export const signIn = async (
     body: JSON.stringify({
       email,
       password
-    }),
+    })
   }).then((response) => {
     return response.json()
   }).then((response) => {
     const accessToken = response[accessTokenField]
 
     if (response && accessToken) {
+      
       const user = parseUserResponse(response.data)
-
+      
       return { user, accessToken } as SignInResponse
     } else {
-      return { user: null, errors: response.errors } as SignInResponse
+      return { errors: { fullMessages: response.errors} } as SignInResponse
     }
   })
 }
@@ -118,7 +137,7 @@ export const signOut = async (accessToken: string) => {
     headers: {
       'Content-Type': 'application/json',
       [accessTokenField]: accessToken
-    },
+    }
   }).then((response) => {
     return response.json()
   }).then((response) => {
@@ -128,7 +147,82 @@ export const signOut = async (accessToken: string) => {
   })
 }
 
-export const refreshToken = () => {
+export const requestPasswordReset = async (
+  email: string,
+  redirectUrl?: string,
+) => {
+  const body = { email } as any
+
+  if (redirectUrl) { body['redirect_url'] = redirectUrl }
+
+  return fetch(`${endPoint}/password`, {
+    method: 'POST',
+    credentials: 'include',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(body)
+  }).then((response) => {
+    return response.json()
+  }).then((response) => {
+    console.log("requestPasswordReset: ", response);
+    
+    const { status, success, message, errors } = response
+
+    return { status, success, message, errors } as ResetPasswordResponse
+  })
+}
+
+export const changePasswordWithCurrentPassword = async (
+  currentPassword: string,
+  password: string,
+  passwordConfirmation: string,
+  accessToken: string
+) => {
+  return fetch(`${endPoint}/password`, {
+    method: 'PUT',
+    credentials: 'include',
+    headers: {
+      'Content-Type': 'application/json',
+      [accessTokenField]: accessToken
+    },
+    body: JSON.stringify({
+      password,
+      password_confirmation: passwordConfirmation,
+      current_password: currentPassword
+    })
+  }).then((response) => {
+    return response.json()
+  }).then((response) => {
+    const { success, data: user, message, errors, [accessTokenField]: accessToken } = response
+
+    return { success, user, message, errors, accessToken } as ChangePasswordResponse
+  })
+}
+
+export const changePassword = async (
+  password: string,
+  passwordConfirmation: string,
+  resetPasswordToken: string
+) => {
+  return fetch(`${endPoint}/password`, {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      password,
+      password_confirmation: passwordConfirmation,
+      reset_password_token: resetPasswordToken
+    })
+  }).then((response) => {
+    return response.json()
+  }).then((response) => {
+    const { success, data: user, errors, message, [accessTokenField]: accessToken } = response
+
+    return { success, user, message, accessToken, errors } as ChangePasswordResponse
+  })
+}
+
+export const requestRefreshToken = () => {
   return fetch(`${endPoint}/refresh_token`, {
     method: "GET",
     credentials: "include"
@@ -136,7 +230,7 @@ export const refreshToken = () => {
 }
 
 export const refreshTokenResponse = async () => {
-  const response = await refreshToken()
+  const response = await requestRefreshToken()
   let data = await response.json()
   const { status } = data
   const accessToken = data[accessTokenField]
@@ -148,7 +242,7 @@ export const refreshTokenResponse = async () => {
   }
   else {
     const errors = data.errors
-    return { status, user: null, errors, accessToken: '' } as RefreshTokenResponse
+    return { status, user: undefined, errors, accessToken: '' } as RefreshTokenResponse
   }
 }
 

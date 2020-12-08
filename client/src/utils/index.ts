@@ -5,13 +5,13 @@ import {
   signOut,
   signUp,
   refreshTokenResponse,
-  refreshToken
+  requestRefreshToken
 } from './djaAuthentication'
 import { client } from './gqlClients'
 
 export {
   getAccessToken,
-  refreshToken,
+  requestRefreshToken,
   refreshTokenResponse,
   setAccessToken,
   signIn,

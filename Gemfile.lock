@@ -1,7 +1,7 @@
 PATH
   remote: ../devise_jwt_auth
   specs:
-    devise_jwt_auth (0.1.5)
+    devise_jwt_auth (0.1.6)
       devise (> 3.5.2, < 5)
       jwt (~> 2.1)
       rails (>= 4.2.0, < 6.1)
@@ -78,6 +78,7 @@ GEM
       railties (>= 4.1.0)
       responders
       warden (~> 1.2.3)
+    dotenv (2.7.6)
     erubi (1.9.0)
     ffi (1.12.2)
     globalid (0.4.2)
@@ -185,6 +186,7 @@ DEPENDENCIES
   byebug
   devise
   devise_jwt_auth!
+  dotenv
   graphql
   graphql-rails_logger
   listen (>= 3.0.5, < 3.2)

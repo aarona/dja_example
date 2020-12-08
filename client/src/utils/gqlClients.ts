@@ -5,7 +5,7 @@ import { onError } from 'apollo-link-error'
 import { TokenRefreshLink } from 'apollo-link-token-refresh'
 import { InMemoryCache } from 'apollo-cache-inmemory'
 import jwtDecode from 'jwt-decode'
-import { getAccessToken, refreshToken, setAccessToken } from './djaAuthentication'
+import { getAccessToken, requestRefreshToken, setAccessToken } from './djaAuthentication'
 
 const cache = new InMemoryCache({})
 const host = process.env.REACT_APP_HOST!
@@ -64,7 +64,7 @@ export const client = new ApolloClient({
       }
     },
     fetchAccessToken: () => {
-      return refreshToken()
+      return requestRefreshToken()
     },
     handleResponse: (_, accessTokenField) => (response: Response) => {
       return response.text().then((body) => {

@@ -13,7 +13,7 @@ export const Header: React.FC<HeaderProps> = () => {
   const [currentUser, setCurrentUser] = useCurrentUser
 
   let body = null
-  let loggedIn = currentUser !== null
+  let loggedIn = currentUser? true : false
 
   const handleLogOut = async (e: any) => {
     e.preventDefault()
